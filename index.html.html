@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whiteout Survival - SVS Prep Week Signup</title>
+    <style>
+        .lang-selector {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 3;
+        }
+        .lang-selector select {
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid #4a9eff;
+            background: rgba(26, 42, 58, 0.8);
+            color: #e0f2ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-selector">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+            <option value="fr">Français</option>
+            <option value="tr">Türkçe</option>
+        </select>
+    </div>
+    <div class="snow" id="snow"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title" data-i18n="title">🧊 WHITEOUT SURVIVAL</h1>
+            <p class="subtitle" data-i18n="subtitle">State vs State Prep Week - Rally Your Forces!</p>
+            <div style="display: flex; justify-content: center; gap: 30px; margin: 15px 0; flex-wrap: wrap;">
+                <div style="background: rgba(74, 158, 255, 0.2); padding: 10px 20px; border-radius: 25px; border: 2px solid #4a9eff;">
+                    <span style="color: #4a9eff; font-weight: bold;" data-i18n="state">🏛️ STATE 2468</span>
+                </div>
+                <div style="background: rgba(255, 215, 0, 0.2); padding: 10px 20px; border-radius: 25px; border: 2px solid #ffd700;">
+                    <span style="color: #ffd700; font-weight: bold;" data-i18n="president">👑 PRESIDENT ROWENA</span>
+                </div>
+            </div>
+            <div class="countdown" id="countdown" data-i18n="countdown">Prep Week Starting Soon!</div>
+        </div>
+
+        <div class="signup-section">
+            <h2 class="section-title" data-i18n="join">🎯 Join the Battle!</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="timeSlot" data-i18n="timeSlot">⏰ Time Slot (UTC):</label>
+                    <select id="timeSlot" required>
+                        <option value="" data-i18n="selectTime">Select your preferred time slot</option>
+                        <!-- Time options unchanged -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="playerName" data-i18n="playerName">🏷️ Player Name:</label>
+                    <input type="text" id="playerName" placeholder="Enter your survivor name" required>
+                </div>
+                <div class="form-group">
+                    <label for="playerId" data-i18n="playerId">🆔 Player ID:</label>
+                    <input type="text" id="playerId" placeholder="Enter your player ID" required>
+                </div>
+                <button type="submit" class="signup-btn" data-i18n="enlist">❄️ Enlist for Battle! ❄️</button>
+            </form>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('instructions')" data-i18n="instructions">📋 Instructions</div>
+            <div class="tab" onclick="showTab('participants')" data-i18n="participants">👥 Participants</div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: '🧊 WHITEOUT SURVIVAL',
+                subtitle: 'State vs State Prep Week - Rally Your Forces!',
+                countdown: 'Prep Week Starting Soon!',
+                state: '🏛️ STATE 2468',
+                president: '👑 PRESIDENT ROWENA',
+                join: '🎯 Join the Battle!',
+                timeSlot: '⏰ Time Slot (UTC):',
+                selectTime: 'Select your preferred time slot',
+                playerName: '🏷️ Player Name:',
+                playerId: '🆔 Player ID:',
+                enlist: '❄️ Enlist for Battle! ❄️',
+                instructions: '📋 Instructions',
+                participants: '👥 Participants'
+            },
+            ko: {
+                title: '🧊 화이트아웃 서바이벌',
+                subtitle: '주 대 주 준비 주간 - 전투에 대비하세요!',
+                countdown: '준비 주간이 곧 시작됩니다!',
+                state: '🏛️ 2468번 주',
+                president: '👑 대통령 로웨나',
+                join: '🎯 전투에 참여하세요!',
+                timeSlot: '⏰ 시간대 (UTC):',
+                selectTime: '원하는 시간대를 선택하세요',
+                playerName: '🏷️ 플레이어 이름:',
+                playerId: '🆔 플레이어 ID:',
+                enlist: '❄️ 전투에 등록하세요! ❄️',
+                instructions: '📋 지침',
+                participants: '👥 참가자'
+            },
+            zh: {
+                title: '🧊 白昼求生',
+                subtitle: '州对州备战周 - 准备你的部队！',
+                countdown: '准备周即将开始！',
+                state: '🏛️ 第2468州',
+                president: '👑 总统 罗维娜',
+                join: '🎯 加入战斗！',
+                timeSlot: '⏰ 时间段 (UTC):',
+                selectTime: '选择您偏好的时间段',
+                playerName: '🏷️ 玩家名称:',
+                playerId: '🆔 玩家ID:',
+                enlist: '❄️ 报名参战！❄️',
+                instructions: '📋 指南',
+                participants: '👥 参战者'
+            },
+            ja: {
+                title: '🧊 ホワイトアウト・サバイバル',
+                subtitle: '州対州準備週間 - 戦いに備えよう！',
+                countdown: '準備週間がまもなく始まります！',
+                state: '🏛️ 州 2468',
+                president: '👑 大統領 ロウェナ',
+                join: '🎯 戦いに参加しよう！',
+                timeSlot: '⏰ 時間帯 (UTC):',
+                selectTime: '希望する時間帯を選択',
+                playerName: '🏷️ プレイヤー名:',
+                playerId: '🆔 プレイヤーID:',
+                enlist: '❄️ 参戦登録 ❄️',
+                instructions: '📋 手順',
+                participants: '👥 参加者'
+            },
+            fr: {
+                title: '🧊 SURVIE GLACIALE',
+                subtitle: 'Semaine de préparation État contre État - Rassemblez vos forces!',
+                countdown: 'La semaine de préparation commence bientôt !',
+                state: '🏛️ ÉTAT 2468',
+                president: '👑 PRÉSIDENTE ROWENA',
+                join: '🎯 Rejoignez la bataille !',
+                timeSlot: '⏰ Créneau horaire (UTC):',
+                selectTime: 'Choisissez votre créneau préféré',
+                playerName: '🏷️ Nom du joueur :',
+                playerId: '🆔 ID du joueur :',
+                enlist: '❄️ Inscrivez-vous à la bataille ! ❄️',
+                instructions: '📋 Instructions',
+                participants: '👥 Participants'
+            },
+            tr: {
+                title: '🧊 BUZUL HAYATTA KALMA',
+                subtitle: 'Eyaletler Arası Hazırlık Haftası - Güçlerini Topla!',
+                countdown: 'Hazırlık haftası yakında başlıyor!',
+                state: '🏛️ 2468. EYALET',
+                president: '👑 BAŞKAN ROWENA',
+                join: '🎯 Savaşa Katıl!',
+                timeSlot: '⏰ Zaman Dilimi (UTC):',
+                selectTime: 'Tercih ettiğiniz zamanı seçin',
+                playerName: '🏷️ Oyuncu Adı:',
+                playerId: '🆔 Oyuncu Kimliği:',
+                enlist: '❄️ Savaşa Katıl! ❄️',
+                instructions: '📋 Talimatlar',
+                participants: '👥 Katılımcılar'
+            }
+        };
+
+        function applyTranslations(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        const languageSelect = document.getElementById('languageSelect');
+        languageSelect.addEventListener('change', (e) => {
+            const lang = e.target.value;
+            localStorage.setItem('language', lang);
+            applyTranslations(lang);
+        });
+
+        const savedLang = localStorage.getItem('language') || 'en';
+        languageSelect.value = savedLang;
+        applyTranslations(savedLang);
+    </script>
+</body>
+</html>
