@@ -231,6 +231,15 @@
             margin-bottom: 20px;
         }
 
+        .error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
         .tabs {
             display: flex;
             margin-bottom: 20px;
@@ -656,7 +665,7 @@
                 'day2-optional1': '❄️ Fire Crystals',
                 'day2-caution1': '🛑 Save Pet Upgrades for Day 5',
                 'day2-caution2': '🛑 Do not call beast rallies — event lasts 48 hrs. Save for Day 3',
-                'day3-title': '🐾 Day 3 – Beast Hunting (F2P MVP Day)',
+                'day3-title': '🐾 3. Gün – Beast Hunting (F2P MVP Day)',
                 'day3-item1': '❄️ Kill Lv.26+ beasts (10 stamina = 12,000 pts)',
                 'day3-item2': '❄️ Call Polar Terror rallies (25 stamina = 30,000 pts)',
                 'day3-item3': '❄️ Spend all saved stamina',
@@ -1198,8 +1207,13 @@
             document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
         }
 
-        // Dummy data for participants (you'll replace this with your backend)
-        let participants = []; // Store participants in memory for demonstration
+        // Initialize participants from localStorage
+        let participants = JSON.parse(localStorage.getItem('svsParticipants')) || [];
+
+        // Function to save participants to localStorage
+        function saveParticipants() {
+            localStorage.setItem('svsParticipants', JSON.stringify(participants));
+        }
 
         // Function to generate time slots (every 30 minutes)
         function generateTimeSlots() {
@@ -1287,8 +1301,9 @@
                 return;
             }
 
-            // Add new participant (this is in-memory only, will not persist on refresh)
+            // Add new participant
             participants.push({ timeSlot, playerName, playerId });
+            saveParticipants(); // Save to localStorage
 
             messageDiv.className = 'success';
             messageDiv.style.backgroundColor = 'rgba(144, 238, 144, 0.2)';
@@ -1313,7 +1328,7 @@
             translatePage(currentLanguage); // Apply initial translations and active button state
             
             generateTimeSlots(); // Populate time slots initially
-            loadParticipants(); // Load participants if any (dummy data for now)
+            loadParticipants(); // Load participants if any (now from localStorage)
             updateCountdownAndInstructions(); // Start the countdown and instruction highlighting
 
             // Update countdown and instructions every second
