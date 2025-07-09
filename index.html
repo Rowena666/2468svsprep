@@ -439,7 +439,7 @@
     <div class="container">
         <div class="header">
             <h1 class="title">🧊 WHITEOUT SURVIVAL</h1>
-            <p class="subtitle">State vs State Prep Week - Rally Your Forces!</p>
+            <p class="subtitle" data-translate="subtitle">State vs State Prep Week - Rally Your Forces!</p>
             <div style="display: flex; justify-content: center; gap: 30px; margin: 15px 0; flex-wrap: wrap;">
                 <div style="background: rgba(74, 158, 255, 0.2); padding: 10px 20px; border-radius: 25px; border: 2px solid #4a9eff;">
                     <span style="color: #4a9eff; font-weight: bold;">🏛️ STATE 2468</span>
@@ -448,12 +448,12 @@
                     <span style="color: #ffd700; font-weight: bold;">👑 PRESIDENT ROWENA</span>
                 </div>
             </div>
-            <div class="countdown" id="countdown">Prep Week Starting Soon!</div>
+            <div class="countdown" id="countdown" data-translate="countdown">Prep Week Starting Soon!</div>
         </div>
 
         <!-- Language Translator Section -->
         <div class="language-translator">
-            <h3 class="translator-title">🌐 Language Translator</h3>
+            <h3 class="translator-title" data-translate="translator-title">🌐 Language Translator</h3>
             <div class="language-grid">
                 <button class="language-btn active" onclick="translatePage('en')" id="lang-en">
                     🇺🇸 English
@@ -474,20 +474,20 @@
                     🇯🇵 日本語
                 </button>
             </div>
-            <div class="translation-notice" id="translationNotice" style="display: none;">
+            <div class="translation-notice" id="translationNotice" style="display: none;" data-translate="translation-notice">
                 ⚠️ Translation in progress... Please wait a moment.
             </div>
         </div>
 
         <div class="date-config">
-            <h3 style="color: #4a9eff; margin-bottom: 15px;">📅 Configure Prep Week Dates</h3>
+            <h3 style="color: #4a9eff; margin-bottom: 15px;" data-translate="date-config-title">📅 Configure Prep Week Dates</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                 <div>
-                    <label style="color: #87ceeb; display: block; margin-bottom: 5px;">Start Date:</label>
+                    <label style="color: #87ceeb; display: block; margin-bottom: 5px;" data-translate="start-date">Start Date:</label>
                     <input type="date" id="startDate" style="width: 100%; padding: 8px; border: 1px solid #4a9eff; border-radius: 5px; background: rgba(26, 42, 58, 0.8); color: #e0f2ff;">
                 </div>
                 <div>
-                    <button onclick="calculateDates()" style="background: linear-gradient(45deg, #4a9eff, #87ceeb); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 25px;">Set Dates</button>
+                    <button onclick="calculateDates()" style="background: linear-gradient(45deg, #4a9eff, #87ceeb); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 25px;" data-translate="set-dates">Set Dates</button>
                 </div>
             </div>
         </div>
@@ -495,26 +495,26 @@
         <div class="stats">
             <div class="stat-card">
                 <div class="stat-number" id="totalSignups">0</div>
-                <div class="stat-label">Total Signups</div>
+                <div class="stat-label" data-translate="total-signups">Total Signups</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="currentDay">-</div>
-                <div class="stat-label">Current Day</div>
+                <div class="stat-label" data-translate="current-day">Current Day</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number">48</div>
-                <div class="stat-label">Time Slots</div>
+                <div class="stat-label" data-translate="time-slots">Time Slots</div>
             </div>
         </div>
 
         <div class="signup-section">
-            <h2 class="section-title">🎯 Join the Battle!</h2>
+            <h2 class="section-title" data-translate="join-battle">🎯 Join the Battle!</h2>
             <div id="message"></div>
             <form id="signupForm">
                 <div class="form-group">
-                    <label for="timeSlot">⏰ Time Slot (UTC):</label>
+                    <label for="timeSlot" data-translate="time-slot">⏰ Time Slot (UTC):</label>
                     <select id="timeSlot" required>
-                        <option value="">Select your preferred time slot</option>
+                        <option value="" data-translate="select-time-slot">Select your preferred time slot</option>
                         <option value="00:00">00:00 UTC</option>
                         <option value="00:30">00:30 UTC</option>
                         <option value="01:00">01:00 UTC</option>
@@ -567,165 +567,119 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="playerName">🏷️ Player Name:</label>
-                    <input type="text" id="playerName" placeholder="Enter your survivor name" required>
+                    <label for="playerName" data-translate="player-name">🏷️ Player Name:</label>
+                    <input type="text" id="playerName" data-translate="player-name-placeholder" placeholder="Enter your survivor name" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="playerId">🆔 Player ID:</label>
-                    <input type="text" id="playerId" placeholder="Enter your player ID" required>
+                    <label for="playerId" data-translate="player-id">🆔 Player ID:</label>
+                    <input type="text" id="playerId" data-translate="player-id-placeholder" placeholder="Enter your player ID" required>
                 </div>
                 
-                <button type="submit" class="signup-btn" id="submitBtn">❄️ Enlist for Battle! ❄️</button>
+                <button type="submit" class="signup-btn" id="submitBtn" data-translate="enlist-btn">❄️ Enlist for Battle! ❄️</button>
             </form>
         </div>
 
         <div class="tabs">
-            <div class="tab active" onclick="showTab('instructions')">📋 Instructions</div>
-            <div class="tab" onclick="showTab('participants')">👥 Participants</div>
+            <div class="tab active" onclick="showTab('instructions')" data-translate="instructions-tab">📋 Instructions</div>
+            <div class="tab" onclick="showTab('participants')" data-translate="participants-tab">👥 Participants</div>
         </div>
 
         <div id="instructions" class="tab-content active">
-            <h2 class="section-title">📚 SVS Prep Week Instructions (State of Power)</h2>
+            <h2 class="section-title" data-translate="instructions-title">📚 SVS Prep Week Instructions (State of Power)</h2>
             
             <div class="day-instructions">
                 <div class="day-title">
                     <span class="day-icon">⚠️</span>
-                    General Rules
+                    <span data-translate="general-rules">General Rules</span>
                 </div>
                 <ul class="instruction-list use-items">
-                    <li>Wait for President Skills before using any speedups or upgrades</li>
-                    <li>Save stamina for Day 3 Beast Hunting</li>
-                    <li>Save Pet Upgrades for Day 5</li>
+                    <li data-translate="rule1">Wait for President Skills before using any speedups or upgrades</li>
+                    <li data-translate="rule2">Save stamina for Day 3 Beast Hunting</li>
+                    <li data-translate="rule3">Save Pet Upgrades for Day 5</li>
                 </ul>
             </div>
 
             <div class="day-instructions">
                 <div class="day-title">
                     <span class="day-icon">🧱</span>
-                    Day 1 – Construction Day
+                    <span data-translate="day1-title">Day 1 – Construction Day</span>
                 </div>
-                <p><strong class="use-items">Use:</strong></p>
+                <p><strong class="use-items" data-translate="use-label">Use:</strong></p>
                 <ul class="instruction-list use-items">
-                    <li>Fire Crystals</li>
-                    <li>Construction Speedups</li>
-                    <li>Chief Charms</li>
+                    <li data-translate="day1-item1">Fire Crystals</li>
+                    <li data-translate="day1-item2">Construction Speedups</li>
+                    <li data-translate="day1-item3">Chief Charms</li>
                 </ul>
-                <p><strong class="dont-use">🛑 Don't start early — wait for Construction Buff from President</strong></p>
+                <p><strong class="dont-use" data-translate="day1-warning">🛑 Don't start early — wait for Construction Buff from President</strong></p>
             </div>
 
             <div class="day-instructions">
                 <div class="day-title">
                     <span class="day-icon">🧠</span>
-                    Day 2 – Research Day
+                    <span data-translate="day2-title">Day 2 – Research Day</span>
                 </div>
-                <p><strong class="use-items">Use:</strong></p>
+                <p><strong class="use-items" data-translate="use-label">Use:</strong></p>
                 <ul class="instruction-list use-items">
-                    <li>Research Speedups (ok to use — just wait for the buff!)</li>
-                    <li>Lucky Wheel Spins</li>
-                    <li>Hero Shards</li>
-                    <li>Resource Gathering</li>
+                    <li data-translate="day2-item1">Research Speedups (ok to use — just wait for the buff!)</li>
+                    <li data-translate="day2-item2">Lucky Wheel Spins</li>
+                    <li data-translate="day2-item3">Hero Shards</li>
+                    <li data-translate="day2-item4">Resource Gathering</li>
                 </ul>
-                <p><strong class="optional">Optional:</strong></p>
+                <p><strong class="optional" data-translate="optional-label">Optional:</strong></p>
                 <ul class="instruction-list optional">
-                    <li>Fire Crystals</li>
+                    <li data-translate="day2-optional1">Fire Crystals</li>
                 </ul>
-                <p><strong class="dont-use">🛑 Save Pet Upgrades for Day 5</strong></p>
-                <p><strong class="dont-use">🛑 Do not call beast rallies — event lasts 48 hrs. Save for Day 3</strong></p>
+                <p><strong class="dont-use" data-translate="day2-warning1">🛑 Save Pet Upgrades for Day 5</strong></p>
+                <p><strong class="dont-use" data-translate="day2-warning2">🛑 Do not call beast rallies — event lasts 48 hrs. Save for Day 3</strong></p>
             </div>
 
             <div class="day-instructions">
                 <div class="day-title">
                     <span class="day-icon">🐾</span>
-                    Day 3 – Beast Hunting (F2P MVP Day)
+                    <span data-translate="day3-title">Day 3 – Beast Hunting (F2P MVP Day)</span>
                 </div>
-                <p><strong class="use-items">Use:</strong></p>
+                <p><strong class="use-items" data-translate="use-label">Use:</strong></p>
                 <ul class="instruction-list use-items">
-                    <li>Kill Lv.26+ beasts (10 stamina = 12,000 pts)</li>
-                    <li>Call Polar Terror rallies (25 stamina = 30,000 pts)</li>
-                    <li>Spend all saved stamina</li>
+                    <li data-translate="day3-item1">Kill Lv.26+ beasts (10 stamina = 12,000 pts)</li>
+                    <li data-translate="day3-item2">Call Polar Terror rallies (25 stamina = 30,000 pts)</li>
+                    <li data-translate="day3-item3">Spend all saved stamina</li>
                 </ul>
-                <p><strong class="optional">Optional:</strong></p>
+                <p><strong class="optional" data-translate="optional-label">Optional:</strong></p>
                 <ul class="instruction-list optional">
-                    <li>Lucky Wheel</li>
-                    <li>Hero Shards</li>
+                    <li data-translate="day3-optional1">Lucky Wheel</li>
+                    <li data-translate="day3-optional2">Hero Shards</li>
                 </ul>
-                <p><strong class="dont-use">⚠️ Do NOT hit lower beasts – bad points</strong></p>
-                <p><strong class="dont-use">⚠️ Joining rallies gives you zero points — host or nothing</strong></p>
-                <p><strong class="dont-use">🛑 Still save Pet Upgrades</strong></p>
+                <p><strong class="dont-use" data-translate="day3-warning1">⚠️ Do NOT hit lower beasts – bad points</strong></p>
+                <p><strong class="dont-use" data-translate="day3-warning2">⚠️ Joining rallies gives you zero points — host or nothing</strong></p>
+                <p><strong class="dont-use" data-translate="day3-warning3">🛑 Still save Pet Upgrades</strong></p>
             </div>
 
             <div class="day-instructions">
                 <div class="day-title">
                     <span class="day-icon">⚔️</span>
-                    Day 4 – Troop Training Day
+                    <span data-translate="day4-title">Day 4 – Troop Training Day</span>
                 </div>
-                <p><strong class="use-items">Use:</strong></p>
+                <p><strong class="use-items" data-translate="use-label">Use:</strong></p>
                 <ul class="instruction-list use-items">
-                    <li>Train or Promote Troops</li>
-                    <li>Chief Gear Charms</li>
-                    <li>Training Speedups</li>
+                    <li data-translate="day4-item1">Train or Promote Troops</li>
+                    <li data-translate="day4-item2">Chief Gear Charms</li>
+                    <li data-translate="day4-item3">Training Speedups</li>
                 </ul>
-                <p><strong class="dont-use">⏳ Wait for Troop Training Buff before starting</strong></p>
-                <p><strong class="dont-use">🛑 Still hold: Pet Upgrades, Hero Essence Stones, Hero Widgets, Chief Gear Upgrades, Leftover Research/Construction Speedups</strong></p>
+                <p><strong class="dont-use" data-translate="day4-warning1">⏳ Wait for Troop Training Buff before starting</strong></p>
+                <p><strong class="dont-use" data-translate="day4-warning2">🛑 Still hold: Pet Upgrades, Hero Essence Stones, Hero Widgets, Chief Gear Upgrades, Leftover Research/Construction Speedups</strong></p>
             </div>
 
             <div class="day-instructions">
                 <div class="day-title">
                     <span class="day-icon">🎯</span>
-                    Day 5 – Final Prep Dump
+                    <span data-translate="day5-title">Day 5 – Final Prep Dump</span>
                 </div>
-                <p><strong class="use-items">Use:</strong></p>
+                <p><strong class="use-items" data-translate="use-label">Use:</strong></p>
                 <ul class="instruction-list use-items">
-                    <li>Chief Gear Upgrades</li>
-                    <li>Research (if anything left)</li>
-                    <li>Hero Essence Stones</li>
-                    <li>Hero Widgets</li>
-                    <li>Pet Upgrades</li>
-                    <li>ALL remaining speedups</li>
-                </ul>
-                <p><strong class="use-items">🎉 This is the big final push. Max your points. Go all in. No leftovers. No regrets.</strong></p>
-            </div>
-        </div>
-
-        <div id="participants" class="tab-content">
-            <h2 class="section-title">👥 Enlisted Survivors</h2>
-            <div class="participant-grid" id="participantGrid">
-                <div class="loading">Loading participants...</div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Global variables
-        let participants = [];
-        let prepWeekDates = [];
-        let currentLanguage = 'en';
-
-        // Translation dictionary
-        const translations = {
-            en: {
-                'Configure Prep Week Dates': 'Configure Prep Week Dates',
-                'Start Date:': 'Start Date:',
-                'Set Dates': 'Set Dates',
-                'Total Signups': 'Total Signups',
-                'Current Day': 'Current Day',
-                'Time Slots': 'Time Slots',
-                'Join the Battle!': 'Join the Battle!',
-                'Time Slot (UTC):': 'Time Slot (UTC):',
-                'Select your preferred time slot': 'Select your preferred time slot',
-                'Player Name:': 'Player Name:',
-                'Enter your survivor name': 'Enter your survivor name',
-                'Player ID:': 'Player ID:',
-                'Enter your player ID': 'Enter your player ID',
-                'Enlist for Battle!': 'Enlist for Battle!',
-                'Instructions': 'Instructions',
-                'Participants': 'Participants',
-                'SVS Prep Week Instructions (State of Power)': 'SVS Prep Week Instructions (State of Power)',
-                'Enlisted Survivors': 'Enlisted Survivors',
-                'Loading participants...': 'Loading participants...',
-                'General Rules': 'General Rules',
-                'Day 1 – Construction Day': 'Day 1 – Construction Day',
-                'Day 2 – Research Day': 'Day 2 – Research Day',
-                'Day 3 – Beast Hunting (F2P MVP Day)': 'Day 3 – Beast Hunting (F2P MVP Day)',
-                'Day 4 – Troop Training Day': 'Day 4 – Tr
+                    <li data-translate="day5-item1">Chief Gear Upgrades</li>
+                    <li data-translate="day5-item2">Research (if anything left)</li>
+                    <li data-translate="day5-item3">Hero Essence Stones</li>
+                    <li data-translate="day5-item4">Hero Widgets</li>
+                    <li data-translate="day5-item5">Pet Upgrades</li>
+                    <li data-translate="day5-item6">ALL remaining speedups</li>
