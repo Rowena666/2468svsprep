@@ -152,8 +152,6 @@
             margin-top: 15px;
         }
         
-        /* Removed .date-config styling as it's no longer needed */
-
         .signup-section {
             background: rgba(26, 42, 58, 0.9);
             padding: 30px;
@@ -453,7 +451,7 @@
                 <button class="language-btn" onclick="translatePage('tr')" id="lang-tr">
                     🇹🇷 Türkçe
                 </button>
-                <button class="language-btn" onclick="translatePage('fr')" id="lang-fr">
+                <button class="language-btn" onclick="translatePage('fr')" onclick="translatePage('fr')" id="lang-fr">
                     🇫🇷 Français
                 </button>
                 <button class="language-btn" onclick="translatePage('es')" id="lang-es">
@@ -478,7 +476,7 @@
                 <div class="stat-label" data-translate="current-day-label">Current Day (UTC)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">48</div>
+                <div class="stat-number" id="availableTimeSlots">48</div>
                 <div class="stat-label" data-translate="time-slots-count">Time Slots Available</div>
             </div>
         </div>
@@ -621,6 +619,10 @@
         // Set the target date for Day 1 (July 14th, 00:00 UTC)
         const dayOneUTC = new Date(Date.UTC(2025, 6, 14, 0, 0, 0)); // Month is 0-indexed (July is 6)
         const prepWeekDurationDays = 7; // Prep week lasts 7 days
+
+        // IMPORTANT: REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL
+        // Example: 'https://script.google.com/macros/s/AKfycbz_YOUR_DEPLOYMENT_ID_HERE/exec'
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbze2zKdlv7ErGvj7XdmdO0eVMcqdQibTtdYVexOAycmlaHs7xfqUfhc9H_ZYVgoKMvl/exec'; 
 
         // Translation dictionaries
         const translations = {
@@ -1059,6 +1061,7 @@
         };
 
         let currentLanguage = 'en'; // Default language
+        let participants = []; // This will now store data fetched from Google Sheet
 
         // Function to create falling snowflakes
         function createSnowflake() {
@@ -1189,7 +1192,7 @@
             applyTranslations();
             updateCountdownAndInstructions(); // Re-run countdown to ensure correct active day display after language change
             generateTimeSlots(); // Re-generate time slots in new language
-            loadParticipants(); // Re-load participants to apply new language if needed
+            loadParticipants(); // Re-load participants to apply new language if needed (data will be fetched from GS)
 
             translationNotice.style.display = 'none'; // Hide notice
         }
@@ -1207,14 +1210,6 @@
             document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
         }
 
-        // Initialize participants from localStorage
-        let participants = JSON.parse(localStorage.getItem('svsParticipants')) || [];
-
-        // Function to save participants to localStorage
-        function saveParticipants() {
-            localStorage.setItem('svsParticipants', JSON.stringify(participants));
-        }
-
         // Function to generate time slots (every 30 minutes)
         function generateTimeSlots() {
             const timeSlotSelect = document.getElementById('timeSlot');
@@ -1229,7 +1224,7 @@
                 option.value = time;
                 option.textContent = time;
 
-                // Check if this time slot is taken
+                // Check if this time slot is taken from the fetched participants array
                 const isTaken = participants.some(p => p.timeSlot === time);
                 if (isTaken) {
                     option.disabled = true;
@@ -1238,61 +1233,93 @@
                 timeSlotSelect.appendChild(option);
             }
              // Update the "Time Slots Available" count in the stats section
-            document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = (24 * 2) - participants.length;
+            document.getElementById('availableTimeSlots').textContent = (24 * 2) - participants.length;
         }
 
-        // Function to load and display participants (dummy data for now)
-        function loadParticipants() {
+        // Function to load and display participants from Google Sheet
+        async function loadParticipants() {
             const participantGrid = document.getElementById('participantGrid');
             participantGrid.innerHTML = ''; // Clear existing participants
+            participantGrid.innerHTML = `<div class="loading" data-translate="loading-participants">${translations[currentLanguage]['loading-participants']}</div>`;
 
-            // Sort participants by time slot for better readability
-            const sortedParticipants = [...participants].sort((a, b) => {
-                const [hourA, minuteA] = a.timeSlot.split(':')[0].split(':').map(Number);
-                const [hourB, minuteB] = b.timeSlot.split(':')[0].split(':').map(Number);
-                
-                if (hourA !== hourB) return hourA - hourB;
-                return minuteA - minuteB;
-            });
-
-            if (sortedParticipants.length === 0) {
-                const loadingDiv = document.createElement('div');
-                loadingDiv.classList.add('loading');
-                loadingDiv.textContent = translations[currentLanguage]['loading-participants'];
-                participantGrid.appendChild(loadingDiv);
+            if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' || !GOOGLE_APPS_SCRIPT_URL) {
+                participantGrid.innerHTML = `<div class="error">Error: Google Apps Script URL not configured. Please set GOOGLE_APPS_SCRIPT_URL in the script.</div>`;
                 document.getElementById('totalSignups').textContent = 0;
+                document.getElementById('availableTimeSlots').textContent = 48; // Assume all available if no data can be fetched
                 return;
             }
 
-            sortedParticipants.forEach(p => {
-                const card = document.createElement('div');
-                card.classList.add('participant-card');
-                card.innerHTML = `
-                    <p><strong>${translations[currentLanguage]['participant-card-name']}</strong> ${p.playerName}</p>
-                    <p><strong>${translations[currentLanguage]['participant-card-id']}</strong> ${p.playerId}</p>
-                    <p><strong>${translations[currentLanguage]['participant-card-time']}</strong> ${p.timeSlot}</p>
-                `;
-                participantGrid.appendChild(card);
-            });
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                participants = await response.json(); // Update the global participants array
 
-            // Update total signups count
-            document.getElementById('totalSignups').textContent = participants.length;
-            // Update the "Time Slots Available" count in the stats section
-            document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = (24 * 2) - participants.length;
+                participantGrid.innerHTML = ''; // Clear loading message
+
+                // Sort participants by time slot for better readability
+                const sortedParticipants = [...participants].sort((a, b) => {
+                    const [hourA, minuteA] = a.timeSlot.split(':')[0].split(':').map(Number);
+                    const [hourB, minuteB] = b.timeSlot.split(':')[0].split(':').map(Number);
+                    
+                    if (hourA !== hourB) return hourA - hourB;
+                    return minuteA - minuteB;
+                });
+
+                if (sortedParticipants.length === 0) {
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.classList.add('loading');
+                    loadingDiv.textContent = translations[currentLanguage]['loading-participants'];
+                    participantGrid.appendChild(loadingDiv);
+                    document.getElementById('totalSignups').textContent = 0;
+                } else {
+                    sortedParticipants.forEach(p => {
+                        const card = document.createElement('div');
+                        card.classList.add('participant-card');
+                        card.innerHTML = `
+                            <p><strong>${translations[currentLanguage]['participant-card-name']}</strong> ${p.playerName}</p>
+                            <p><strong>${translations[currentLanguage]['participant-card-id']}</strong> ${p.playerId}</p>
+                            <p><strong>${translations[currentLanguage]['participant-card-time']}</strong> ${p.timeSlot}</p>
+                        `;
+                        participantGrid.appendChild(card);
+                    });
+                }
+                
+                // Update total signups count and available slots
+                document.getElementById('totalSignups').textContent = participants.length;
+                document.getElementById('availableTimeSlots').textContent = (24 * 2) - participants.length;
+
+                generateTimeSlots(); // Re-generate to update disabled slots based on fetched data
+
+            } catch (error) {
+                console.error('Error loading participants:', error);
+                participantGrid.innerHTML = `<div class="error">Error loading participants: ${error.message}. Make sure your Google Apps Script is correctly deployed and accessible.</div>`;
+                document.getElementById('totalSignups').textContent = 0;
+                document.getElementById('availableTimeSlots').textContent = 48;
+            }
         }
 
         // Handle form submission
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
+        document.getElementById('signupForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent default form submission
 
             const timeSlot = document.getElementById('timeSlot').value;
             const playerName = document.getElementById('playerName').value;
             const playerId = document.getElementById('playerId').value;
             const messageDiv = document.getElementById('message');
+            messageDiv.textContent = ''; // Clear previous messages
+            messageDiv.className = ''; // Clear previous styles
 
-            // Check if the slot is already taken (client-side check for UX)
-            const isSlotTaken = participants.some(p => p.timeSlot === timeSlot);
-            if (isSlotTaken) {
+            if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' || !GOOGLE_APPS_SCRIPT_URL) {
+                messageDiv.className = 'error';
+                messageDiv.textContent = 'Error: Google Apps Script URL not configured. Cannot submit data.';
+                return;
+            }
+
+            // Client-side check based on currently loaded participants (for quick feedback)
+            const isSlotTakenClientSide = participants.some(p => p.timeSlot === timeSlot);
+            if (isSlotTakenClientSide) {
                 messageDiv.className = 'error';
                 messageDiv.style.backgroundColor = 'rgba(255, 107, 107, 0.2)';
                 messageDiv.style.borderColor = '#ff6b6b';
@@ -1301,24 +1328,63 @@
                 return;
             }
 
-            // Add new participant
-            participants.push({ timeSlot, playerName, playerId });
-            saveParticipants(); // Save to localStorage
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true; // Disable button to prevent double submission
+            submitBtn.textContent = 'Submitting...';
 
-            messageDiv.className = 'success';
-            messageDiv.style.backgroundColor = 'rgba(144, 238, 144, 0.2)';
-            messageDiv.style.borderColor = '#90ee90';
-            messageDiv.style.color = '#90ee90';
-            messageDiv.textContent = translations[currentLanguage]['success-message'] + playerName + '!';
-            
-            this.reset(); // Clear the form
-            generateTimeSlots(); // Refresh time slots to mark the taken one as disabled
-            loadParticipants(); // Refresh participant list
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors', // Crucial for cross-origin requests to Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        timeSlot: timeSlot,
+                        playerName: playerName,
+                        playerId: playerId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    messageDiv.className = 'success';
+                    messageDiv.style.backgroundColor = 'rgba(144, 238, 144, 0.2)';
+                    messageDiv.style.borderColor = '#90ee90';
+                    messageDiv.style.color = '#90ee90';
+                    messageDiv.textContent = translations[currentLanguage]['success-message'] + playerName + '!';
+                    
+                    this.reset(); // Clear the form
+                    await loadParticipants(); // Reload participants from Google Sheet to get the latest data
+                } else {
+                    messageDiv.className = 'error';
+                    messageDiv.style.backgroundColor = 'rgba(255, 107, 107, 0.2)';
+                    messageDiv.style.borderColor = '#ff6b6b';
+                    messageDiv.style.color = '#ff6b6b';
+                    // Use server's error message if available, otherwise a generic one
+                    messageDiv.textContent = result.message || 'Signup failed. Please try again.'; 
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                messageDiv.className = 'error';
+                messageDiv.style.backgroundColor = 'rgba(255, 107, 107, 0.2)';
+                messageDiv.style.borderColor = '#ff6b6b';
+                messageDiv.style.color = '#ff6b6b';
+                messageDiv.textContent = `An error occurred: ${error.message}. Please check your network or try again.`;
+            } finally {
+                submitBtn.disabled = false; // Re-enable button
+                submitBtn.textContent = translations[currentLanguage]['enlist-btn'];
+            }
         });
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial language from local storage or default to 'en'\
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Set initial language from local storage or default to 'en'
             const savedLang = localStorage.getItem('selectedLanguage');
             if (savedLang && translations[savedLang]) {
                 currentLanguage = savedLang;
@@ -1327,8 +1393,10 @@
             }
             translatePage(currentLanguage); // Apply initial translations and active button state
             
-            generateTimeSlots(); // Populate time slots initially
-            loadParticipants(); // Load participants if any (now from localStorage)
+            // Load participants from Google Sheet first
+            await loadParticipants(); 
+            
+            generateTimeSlots(); // Populate time slots based on loaded participants
             updateCountdownAndInstructions(); // Start the countdown and instruction highlighting
 
             // Update countdown and instructions every second
