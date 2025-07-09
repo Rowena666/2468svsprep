@@ -320,9 +320,11 @@
     <script>
         // Translation dictionaries
         const translations = {
-            en: { // Added an explicit English translation block for consistency
+            en: { 
                 'subtitle': 'State vs State Prep Week - Rally Your Forces!',
-                'countdown': 'Prep Week Starting Soon!',
+                'countdown-starting': 'Prep Week Starting Soon!',
+                'countdown-active': 'Starts in: <span style="color: #87ceeb;">{days}d {hours}h {minutes}m {seconds}s</span>',
+                'countdown-ended': 'The Prep Week has started!',
                 'translator-title': '🌐 Language Translator',
                 'translation-notice': '⚠️ Translation in progress... Please wait a moment.',
                 'join-battle': '🎯 Join the Battle!',
@@ -338,11 +340,13 @@
                 'rule1': '❄️ Wait for President Skills before using speedups',
                 'rule2': '❄️ Save stamina for Beast Hunting days',
                 'rule3': '❄️ Coordinate with alliance for maximum points',
-                'success-message': '✅ Successfully enlisted! Welcome to the battle, ', // Added success message key
+                'success-message': '✅ Successfully enlisted! Welcome to the battle, ', 
             },
             ko: {
                 'subtitle': '국가 대 국가 준비 주간 - 군대를 집결하세요!',
-                'countdown': '준비 주간이 곧 시작됩니다!',
+                'countdown-starting': '준비 주간이 곧 시작됩니다!',
+                'countdown-active': '시작까지: <span style="color: #87ceeb;">{days}일 {hours}시 {minutes}분 {seconds}초</span>',
+                'countdown-ended': '준비 주간이 시작되었습니다!',
                 'translator-title': '🌐 언어 번역기',
                 'translation-notice': '⚠️ 번역 중... 잠시 기다려 주세요.',
                 'join-battle': '🎯 전투에 참여하세요!',
@@ -362,7 +366,9 @@
             },
             tr: {
                 'subtitle': 'Devlet vs Devlet Hazırlık Haftası - Güçlerinizi Toplayın!',
-                'countdown': 'Hazırlık Haftası Yakında Başlıyor!',
+                'countdown-starting': 'Hazırlık Haftası Yakında Başlıyor!',
+                'countdown-active': 'Başlangıç: <span style="color: #87ceeb;">{days}g {hours}s {minutes}d {seconds}sn</span>',
+                'countdown-ended': 'Hazırlık Haftası başladı!',
                 'translator-title': '🌐 Dil Çevirmeni',
                 'translation-notice': '⚠️ Çeviri devam ediyor... Lütfen bekleyin.',
                 'join-battle': '🎯 Savaşa Katıl!',
@@ -382,7 +388,9 @@
             },
             fr: {
                 'subtitle': 'Semaine de Préparation État vs État - Ralliez vos Forces!',
-                'countdown': 'La Semaine de Préparation Commence Bientôt!',
+                'countdown-starting': 'La Semaine de Préparation Commence Bientôt!',
+                'countdown-active': 'Commence dans : <span style="color: #87ceeb;">{days}j {hours}h {minutes}m {seconds}s</span>',
+                'countdown-ended': 'La Semaine de Préparation a commencé !',
                 'translator-title': '🌐 Traducteur de Langues',
                 'translation-notice': '⚠️ Traduction en cours... Veuillez patienter.',
                 'join-battle': '🎯 Rejoignez la Bataille!',
@@ -402,7 +410,9 @@
             },
             es: {
                 'subtitle': 'Semana de Preparación de Estado vs. Estado - ¡Reúne a tus Fuerzas!',
-                'countdown': '¡La Semana de Preparación Comienza Pronto!',
+                'countdown-starting': '¡La Semana de Preparación Comienza Pronto!',
+                'countdown-active': 'Comienza en: <span style="color: #87ceeb;">{days}d {hours}h {minutes}m {seconds}s</span>',
+                'countdown-ended': '¡La Semana de Preparación ha comenzado!',
                 'translator-title': '🌐 Traductor de Idiomas',
                 'translation-notice': '⚠️ Traducción en curso... Por favor, espere un momento.',
                 'join-battle': '🎯 ¡Únete a la Batalla!',
@@ -424,6 +434,7 @@
 
         let currentLanguage = 'en';
         let participants = [];
+        let countdownInterval; // Declare countdownInterval globally
 
         // Snow animation
         function createSnow() {
@@ -454,17 +465,59 @@
             setTimeout(() => {
                 document.querySelectorAll('[data-translate]').forEach(element => {
                     const key = element.getAttribute('data-translate');
-                    // Use the English translation as the fallback "original" text
-                    const originalText = translations['en'][key] || ''; 
-                    element.textContent = (translations[lang] && translations[lang][key]) ? translations[lang][key] : originalText;
+                    // Special handling for the countdown element, as its content is dynamic
+                    if (element.id === 'countdown') {
+                        // The countdown content will be updated by updateCountdown()
+                        // No need to set its textContent here directly from data-translate="countdown"
+                        // unless it's the initial "Prep Week Starting Soon!"
+                        if (!countdownInterval) { // If countdown hasn't started yet
+                           element.textContent = translations[lang]['countdown-starting'];
+                        }
+                    } else {
+                        // Use the English translation as the fallback "original" text
+                        const originalText = translations['en'][key] || ''; 
+                        element.textContent = (translations[lang] && translations[lang][key]) ? translations[lang][key] : originalText;
+                    }
                 });
                 
                 // Special handling for placeholder attributes
                 document.getElementById('playerName').placeholder = translations[lang]['player-name-placeholder'];
                 document.getElementById('playerId').placeholder = translations[lang]['player-id-placeholder'];
 
+                // Re-run countdown update to refresh its language
+                updateCountdown(); 
                 notice.style.display = 'none';
             }, 500);
+        }
+
+        // Countdown Timer Functionality
+        const targetDate = new Date('2025-07-14T00:00:00Z').getTime(); // July 14th, 2025 at 00:00 UTC
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const countdownElement = document.getElementById('countdown');
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                countdownElement.innerHTML = translations[currentLanguage]['countdown-ended'];
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Replace placeholders in the translated string
+            let countdownText = translations[currentLanguage]['countdown-active'];
+            countdownText = countdownText.replace('{days}', days);
+            countdownText = countdownText.replace('{hours}', hours);
+            countdownText = countdownText.replace('{minutes}', minutes);
+            countdownText = countdownText.replace('{seconds}', seconds);
+
+            countdownElement.innerHTML = countdownText;
         }
 
         // Form submission
@@ -499,6 +552,9 @@
 
         // Initialize
         createSnow();
+        // Start the countdown immediately
+        updateCountdown(); 
+        countdownInterval = setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
