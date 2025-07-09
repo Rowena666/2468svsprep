@@ -151,6 +151,14 @@
             font-size: 14px;
             margin-top: 15px;
         }
+        
+        .date-config {
+            background: rgba(26, 42, 58, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #4a9eff;
+        }
 
         .signup-section {
             background: rgba(26, 42, 58, 0.9);
@@ -196,6 +204,12 @@
             box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
         }
 
+        /* Style for disabled/taken options */
+        select option:disabled {
+            background-color: #420d0d; /* Dark red for taken slots */
+            color: #ccc; /* Lighter text for contrast */
+        }
+
         .signup-btn {
             background: linear-gradient(45deg, #4a9eff, #87ceeb);
             color: white;
@@ -223,6 +237,170 @@
             margin-bottom: 20px;
         }
 
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(26, 42, 58, 0.9);
+            border-radius: 15px;
+            padding: 5px;
+            border: 2px solid #4a9eff;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, #4a9eff, #87ceeb);
+            color: white;
+            box-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(74, 158, 255, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .day-instructions {
+            background: rgba(26, 42, 58, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4a9eff;
+        }
+
+        .day-instructions.current-day {
+            background: linear-gradient(45deg, rgba(74, 158, 255, 0.2), rgba(135, 206, 235, 0.2));
+            border-left: 5px solid #90ee90;
+            border-right: 5px solid #90ee90;
+            box-shadow: 0 0 20px rgba(144, 238, 144, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(144, 238, 144, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(144, 238, 144, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(144, 238, 144, 0.3); }
+        }
+
+        .day-instructions.current-day .day-title {
+            color: #90ee90;
+            text-shadow: 0 0 10px rgba(144, 238, 144, 0.5);
+        }
+
+        .day-instructions.current-day .day-title:before {
+            content: "🟢 ACTIVE: ";
+            color: #90ee90;
+            font-weight: bold;
+        }
+
+        .day-title {
+            font-size: 1.5em;
+            color: #4a9eff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .day-icon {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        .instruction-list {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .instruction-list li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .instruction-list li:before {
+            content: "❄️";
+            position: absolute;
+            left: 0;
+        }
+
+        .use-items {
+            color: #90ee90;
+        }
+
+        .dont-use {
+            color: #ff6b6b;
+        }
+
+        .optional {
+            color: #ffd700;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(26, 42, 58, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #4a9eff;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4a9eff;
+        }
+
+        .stat-label {
+            color: #87ceeb;
+            margin-top: 5px;
+        }
+
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .participant-card {
+            background: rgba(42, 58, 74, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #4a9eff;
+            transition: transform 0.3s ease;
+        }
+
+        .participant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(74, 158, 255, 0.3);
+        }
+        
+        .loading {
+            text-align: center;
+            color: #87ceeb;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .title {
                 font-size: 2em;
@@ -230,6 +408,14 @@
             
             .language-grid {
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .participants-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -276,6 +462,34 @@
             </div>
         </div>
 
+        <div class="date-config">
+            <h3 style="color: #4a9eff; margin-bottom: 15px;" data-translate="configure-dates">📅 Configure Prep Week Dates</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <label style="color: #87ceeb; display: block; margin-bottom: 5px;" data-translate="start-date-label">Start Date:</label>
+                    <input type="date" id="startDate" style="width: 100%; padding: 8px; border: 1px solid #4a9eff; border-radius: 5px; background: rgba(26, 42, 58, 0.8); color: #e0f2ff;">
+                </div>
+                <div>
+                    <button onclick="calculateDates()" style="background: linear-gradient(45deg, #4a9eff, #87ceeb); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 25px;" data-translate="set-dates-btn">Set Dates</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalSignups">0</div>
+                <div class="stat-label" data-translate="total-signups">Total Signups</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="currentDay">-</div>
+                <div class="stat-label" data-translate="current-day">Current Day</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">48</div>
+                <div class="stat-label" data-translate="time-slots-count">Time Slots Available</div>
+            </div>
+        </div>
+
         <div class="signup-section">
             <h2 class="section-title" data-translate="join-battle">🎯 Join the Battle!</h2>
             <div id="message"></div>
@@ -283,11 +497,7 @@
                 <div class="form-group">
                     <label for="timeSlot" data-translate="time-slot">⏰ Time Slot (UTC):</label>
                     <select id="timeSlot" required>
-                        <option value="" data-translate="select-time-slot">Select your preferred time slot</option>
-                        <option value="00:00">00:00 UTC</option>
-                        <option value="12:00">12:00 UTC</option>
-                        <option value="18:00">18:00 UTC</option>
-                    </select>
+                        </select>
                 </div>
                 
                 <div class="form-group">
@@ -304,15 +514,112 @@
             </form>
         </div>
 
-        <div class="signup-section">
-            <h2 class="section-title" data-translate="instructions-title">📚 Basic Instructions</h2>
-            <div style="background: rgba(42, 58, 74, 0.9); padding: 20px; border-radius: 12px; border: 1px solid #4a9eff;">
-                <h3 style="color: #4a9eff; margin-bottom: 15px;" data-translate="general-rules">⚠️ General Rules</h3>
-                <ul style="list-style: none; margin-left: 20px;">
-                    <li style="margin-bottom: 8px; color: #90ee90;" data-translate="rule1">❄️ Wait for President Skills before using speedups</li>
-                    <li style="margin-bottom: 8px; color: #90ee90;" data-translate="rule2">❄️ Save stamina for Beast Hunting days</li>
-                    <li style="margin-bottom: 8px; color: #90ee90;" data-translate="rule3">❄️ Coordinate with alliance for maximum points</li>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('instructions')" data-translate="tab-instructions">📋 Instructions</div>
+            <div class="tab" onclick="showTab('participants')" data-translate="tab-participants">👥 Participants</div>
+        </div>
+
+        <div id="instructions" class="tab-content active">
+            <h2 class="section-title" data-translate="svs-instructions-title">📚 SVS Prep Week Instructions (State of Power)</h2>
+            
+            <div class="day-instructions">
+                <div class="day-title" data-translate="general-rules-title">
+                    <span class="day-icon">⚠️</span> General Rules
+                </div>
+                <ul class="instruction-list use-items">
+                    <li data-translate="general-rule1">❄️ Wait for President Skills before using any speedups or upgrades</li>
+                    <li data-translate="general-rule2">❄️ Save stamina for Day 3 Beast Hunting</li>
+                    <li data-translate="general-rule3">❄️ Save Pet Upgrades for Day 5</li>
                 </ul>
+            </div>
+
+            <div class="day-instructions" id="day1">
+                <div class="day-title" data-translate="day1-title">
+                    <span class="day-icon">🧱</span> Day 1 – Construction Day
+                </div>
+                <p><strong class="use-items" data-translate="use-items-label">Use:</strong></p>
+                <ul class="instruction-list use-items">
+                    <li data-translate="day1-item1">❄️ Fire Crystals</li>
+                    <li data-translate="day1-item2">❄️ Construction Speedups</li>
+                    <li data-translate="day1-item3">❄️ Chief Charms</li>
+                </ul>
+                <p><strong class="dont-use" data-translate="day1-caution">🛑 Don't start early — wait for Construction Buff from President</strong></p>
+            </div>
+
+            <div class="day-instructions" id="day2">
+                <div class="day-title" data-translate="day2-title">
+                    <span class="day-icon">🧠</span> Day 2 – Research Day
+                </div>
+                <p><strong class="use-items" data-translate="use-items-label">Use:</strong></p>
+                <ul class="instruction-list use-items">
+                    <li data-translate="day2-item1">❄️ Research Speedups (ok to use — just wait for the buff!)</li>
+                    <li data-translate="day2-item2">❄️ Lucky Wheel Spins</li>
+                    <li data-translate="day2-item3">❄️ Hero Shards</li>
+                    <li data-translate="day2-item4">❄️ Resource Gathering</li>
+                </ul>
+                <p><strong class="optional" data-translate="optional-label">Optional:</strong></p>
+                <ul class="instruction-list optional">
+                    <li data-translate="day2-optional1">❄️ Fire Crystals</li>
+                </ul>
+                <p><strong class="dont-use" data-translate="day2-caution1">🛑 Save Pet Upgrades for Day 5</strong></p>
+                <p><strong class="dont-use" data-translate="day2-caution2">🛑 Do not call beast rallies — event lasts 48 hrs. Save for Day 3</strong></p>
+            </div>
+
+            <div class="day-instructions" id="day3">
+                <div class="day-title" data-translate="day3-title">
+                    <span class="day-icon">🐾</span> Day 3 – Beast Hunting (F2P MVP Day)
+                </div>
+                <p><strong class="use-items" data-translate="use-items-label">Use:</strong></p>
+                <ul class="instruction-list use-items">
+                    <li data-translate="day3-item1">❄️ Kill Lv.26+ beasts (10 stamina = 12,000 pts)</li>
+                    <li data-translate="day3-item2">❄️ Call Polar Terror rallies (25 stamina = 30,000 pts)</li>
+                    <li data-translate="day3-item3">❄️ Spend all saved stamina</li>
+                </ul>
+                <p><strong class="optional" data-translate="optional-label">Optional:</strong></p>
+                <ul class="instruction-list optional">
+                    <li data-translate="day3-optional1">❄️ Lucky Wheel</li>
+                    <li data-translate="day3-optional2">❄️ Hero Shards</li>
+                </ul>
+                <p><strong class="dont-use" data-translate="day3-caution1">⚠️ Do NOT hit lower beasts – bad points</strong></p>
+                <p><strong class="dont-use" data-translate="day3-caution2">⚠️ Joining rallies gives you zero points — host or nothing</strong></p>
+                <p><strong class="dont-use" data-translate="day3-caution3">🛑 Still save Pet Upgrades</strong></p>
+            </div>
+
+            <div class="day-instructions" id="day4">
+                <div class="day-title" data-translate="day4-title">
+                    <span class="day-icon">⚔️</span> Day 4 – Troop Training Day
+                </div>
+                <p><strong class="use-items" data-translate="use-items-label">Use:</strong></p>
+                <ul class="instruction-list use-items">
+                    <li data-translate="day4-item1">❄️ Train or Promote Troops</li>
+                    <li data-translate="day4-item2">❄️ Chief Gear Charms</li>
+                    <li data-translate="day4-item3">❄️ Training Speedups</li>
+                </ul>
+                <p><strong class="dont-use" data-translate="day4-caution1">⏳ Wait for Troop Training Buff before starting</strong></p>
+                <p><strong class="dont-use" data-translate="day4-caution2">🛑 Still hold: Pet Upgrades, Hero Essence Stones, Hero Widgets, Chief Gear Upgrades, Leftover Research/Construction Speedups</strong></p>
+            </div>
+
+            <div class="day-instructions" id="day5">
+                <div class="day-title" data-translate="day5-title">
+                    <span class="day-icon">🎯</span> Day 5 – Final Prep Dump
+                </div>
+                <p><strong class="use-items" data-translate="use-items-label">Use:</strong></p>
+                <ul class="instruction-list use-items">
+                    <li data-translate="day5-item1">❄️ Chief Gear Upgrades</li>
+                    <li data-translate="day5-item2">❄️ Research (if anything left)</li>
+                    <li data-translate="day5-item3">❄️ Hero Essence Stones</li>
+                    <li data-translate="day5-item4">❄️ Hero Widgets</li>
+                    <li data-translate="day5-item5">❄️ Pet Upgrades</li>
+                    <li data-translate="day5-item6">❄️ ALL remaining speedups</li>
+                </ul>
+                <p><strong class="use-items" data-translate="day5-final-push">🎉 This is the big final push. Max your points. Go all in. No leftovers. No regrets.</strong></p>
+            </div>
+        </div>
+
+        <div id="participants" class="tab-content">
+            <h2 class="section-title" data-translate="enlisted-survivors-title">👥 Enlisted Survivors</h2>
+            <div class="participants-grid" id="participantGrid">
+                <div class="loading" data-translate="loading-participants">Loading participants...</div>
             </div>
         </div>
     </div>
@@ -322,239 +629,6 @@
         const translations = {
             en: { 
                 'subtitle': 'State vs State Prep Week - Rally Your Forces!',
-                'countdown-starting': 'Prep Week Starting Soon!',
+                'countdown-starting': 'Prep Week Starting Soon! Set the start date below.',
                 'countdown-active': 'Starts in: <span style="color: #87ceeb;">{days}d {hours}h {minutes}m {seconds}s</span>',
-                'countdown-ended': 'The Prep Week has started!',
-                'translator-title': '🌐 Language Translator',
-                'translation-notice': '⚠️ Translation in progress... Please wait a moment.',
-                'join-battle': '🎯 Join the Battle!',
-                'time-slot': '⏰ Time Slot (UTC):',
-                'select-time-slot': 'Select your preferred time slot',
-                'player-name': '🏷️ Player Name:',
-                'player-name-placeholder': 'Enter your survivor name',
-                'player-id': '🆔 Player ID:',
-                'player-id-placeholder': 'Enter your player ID',
-                'enlist-btn': '❄️ Enlist for Battle! ❄️',
-                'instructions-title': '📚 Basic Instructions',
-                'general-rules': '⚠️ General Rules',
-                'rule1': '❄️ Wait for President Skills before using speedups',
-                'rule2': '❄️ Save stamina for Beast Hunting days',
-                'rule3': '❄️ Coordinate with alliance for maximum points',
-                'success-message': '✅ Successfully enlisted! Welcome to the battle, ', 
-            },
-            ko: {
-                'subtitle': '국가 대 국가 준비 주간 - 군대를 집결하세요!',
-                'countdown-starting': '준비 주간이 곧 시작됩니다!',
-                'countdown-active': '시작까지: <span style="color: #87ceeb;">{days}일 {hours}시 {minutes}분 {seconds}초</span>',
-                'countdown-ended': '준비 주간이 시작되었습니다!',
-                'translator-title': '🌐 언어 번역기',
-                'translation-notice': '⚠️ 번역 중... 잠시 기다려 주세요.',
-                'join-battle': '🎯 전투에 참여하세요!',
-                'time-slot': '⏰ 시간대 (UTC):',
-                'select-time-slot': '선호하는 시간대를 선택하세요',
-                'player-name': '🏷️ 플레이어 이름:',
-                'player-name-placeholder': '생존자 이름을 입력하세요',
-                'player-id': '🆔 플레이어 ID:',
-                'player-id-placeholder': '플레이어 ID를 입력하세요',
-                'enlist-btn': '❄️ 전투에 참여하기! ❄️',
-                'instructions-title': '📚 기본 지침',
-                'general-rules': '⚠️ 일반 규칙',
-                'rule1': '❄️ 가속 사용 전 대통령 스킬을 기다리세요',
-                'rule2': '❄️ 야수 사냥일을 위해 체력을 아끼세요',
-                'rule3': '❄️ 최대 점수를 위해 동맹과 협력하세요',
-                'success-message': '✅ 성공적으로 등록되었습니다! 전투에 오신 것을 환영합니다, ',
-            },
-            tr: {
-                'subtitle': 'Devlet vs Devlet Hazırlık Haftası - Güçlerinizi Toplayın!',
-                'countdown-starting': 'Hazırlık Haftası Yakında Başlıyor!',
-                'countdown-active': 'Başlangıç: <span style="color: #87ceeb;">{days}g {hours}s {minutes}d {seconds}sn</span>',
-                'countdown-ended': 'Hazırlık Haftası başladı!',
-                'translator-title': '🌐 Dil Çevirmeni',
-                'translation-notice': '⚠️ Çeviri devam ediyor... Lütfen bekleyin.',
-                'join-battle': '🎯 Savaşa Katıl!',
-                'time-slot': '⏰ Zaman Dilimi (UTC):',
-                'select-time-slot': 'Tercih ettiğiniz zaman dilimini seçin',
-                'player-name': '🏷️ Oyuncu Adı:',
-                'player-name-placeholder': 'Hayatta kalan adınızı girin',
-                'player-id': '🆔 Oyuncu ID:',
-                'player-id-placeholder': 'Oyuncu ID\'nizi girin',
-                'enlist-btn': '❄️ Savaşa Katıl! ❄️',
-                'instructions-title': '📚 Temel Talimatlar',
-                'general-rules': '⚠️ Genel Kurallar',
-                'rule1': '❄️ Hızlandırma kullanmadan önce Başkan Becerilerini bekleyin',
-                'rule2': '❄️ Canavar Avcılığı günleri için dayanıklılığı saklayın',
-                'rule3': '❄️ Maksimum puan için ittifakla koordine olun',
-                'success-message': '✅ Başarıyla kaydolundu! Savaşa hoş geldiniz, ',
-            },
-            fr: {
-                'subtitle': 'Semaine de Préparation État vs État - Ralliez vos Forces!',
-                'countdown-starting': 'La Semaine de Préparation Commence Bientôt!',
-                'countdown-active': 'Commence dans : <span style="color: #87ceeb;">{days}j {hours}h {minutes}m {seconds}s</span>',
-                'countdown-ended': 'La Semaine de Préparation a commencé !',
-                'translator-title': '🌐 Traducteur de Langues',
-                'translation-notice': '⚠️ Traduction en cours... Veuillez patienter.',
-                'join-battle': '🎯 Rejoignez la Bataille!',
-                'time-slot': '⏰ Créneau Horaire (UTC):',
-                'select-time-slot': 'Sélectionnez votre créneau horaire préféré',
-                'player-name': '🏷️ Nom du Joueur:',
-                'player-name-placeholder': 'Entrez votre nom de survivant',
-                'player-id': '🆔 ID du Joueur:',
-                'player-id-placeholder': 'Entrez votre ID de joueur',
-                'enlist-btn': '❄️ S\'enrôler pour la Bataille! ❄️',
-                'instructions-title': '📚 Instructions de Base',
-                'general-rules': '⚠️ Règles Générales',
-                'rule1': '❄️ Attendez les Compétences du Président avant d\'utiliser les accélérations',
-                'rule2': '❄️ Économisez l\'endurance pour les jours de Chasse aux Bêtes',
-                'rule3': '❄️ Coordonnez avec l\'alliance pour un maximum de points',
-                'success-message': '✅ Enrôlé avec succès ! Bienvenue à la bataille, ',
-            },
-            es: {
-                'subtitle': 'Semana de Preparación de Estado vs. Estado - ¡Reúne a tus Fuerzas!',
-                'countdown-starting': '¡La Semana de Preparación Comienza Pronto!',
-                'countdown-active': 'Comienza en: <span style="color: #87ceeb;">{days}d {hours}h {minutes}m {seconds}s</span>',
-                'countdown-ended': '¡La Semana de Preparación ha comenzado!',
-                'translator-title': '🌐 Traductor de Idiomas',
-                'translation-notice': '⚠️ Traducción en curso... Por favor, espere un momento.',
-                'join-battle': '🎯 ¡Únete a la Batalla!',
-                'time-slot': '⏰ Franja Horaria (UTC):',
-                'select-time-slot': 'Selecciona tu franja horaria preferida',
-                'player-name': '🏷️ Nombre del Jugador:',
-                'player-name-placeholder': 'Introduce tu nombre de superviviente',
-                'player-id': '🆔 ID del Jugador:',
-                'player-id-placeholder': 'Introduce tu ID de jugador',
-                'enlist-btn': '❄️ ¡Alístate para la Batalla! ❄️',
-                'instructions-title': '📚 Instrucciones Básicas',
-                'general-rules': '⚠️ Reglas Generales',
-                'rule1': '❄️ Espera las Habilidades del Presidente antes de usar aceleradores',
-                'rule2': '❄️ Guarda la resistencia para los días de Caza de Bestias',
-                'rule3': '❄️ Coordínate con la alianza para obtener el máximo de puntos',
-                'success-message': '✅ ¡Alistado con éxito! Bienvenido a la batalla, ',
-            }
-        };
-
-        let currentLanguage = 'en';
-        let participants = [];
-        let countdownInterval; // Declare countdownInterval globally
-
-        // Snow animation
-        function createSnow() {
-            const snowContainer = document.getElementById('snow');
-            for (let i = 0; i < 50; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.innerHTML = '❄';
-                snowflake.style.left = Math.random() * 100 + '%';
-                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-                snowflake.style.animationDelay = Math.random() * 2 + 's';
-                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
-                snowContainer.appendChild(snowflake);
-            }
-        }
-
-        // Translation function
-        function translatePage(lang) {
-            const notice = document.getElementById('translationNotice');
-            notice.style.display = 'block';
-            
-            // Update active language button
-            document.querySelectorAll('.language-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('lang-' + lang).classList.add('active');
-            
-            currentLanguage = lang;
-            
-            setTimeout(() => {
-                document.querySelectorAll('[data-translate]').forEach(element => {
-                    const key = element.getAttribute('data-translate');
-                    // Special handling for the countdown element, as its content is dynamic
-                    if (element.id === 'countdown') {
-                        // The countdown content will be updated by updateCountdown()
-                        // No need to set its textContent here directly from data-translate="countdown"
-                        // unless it's the initial "Prep Week Starting Soon!"
-                        if (!countdownInterval) { // If countdown hasn't started yet
-                           element.textContent = translations[lang]['countdown-starting'];
-                        }
-                    } else {
-                        // Use the English translation as the fallback "original" text
-                        const originalText = translations['en'][key] || ''; 
-                        element.textContent = (translations[lang] && translations[lang][key]) ? translations[lang][key] : originalText;
-                    }
-                });
-                
-                // Special handling for placeholder attributes
-                document.getElementById('playerName').placeholder = translations[lang]['player-name-placeholder'];
-                document.getElementById('playerId').placeholder = translations[lang]['player-id-placeholder'];
-
-                // Re-run countdown update to refresh its language
-                updateCountdown(); 
-                notice.style.display = 'none';
-            }, 500);
-        }
-
-        // Countdown Timer Functionality
-        const targetDate = new Date('2025-07-14T00:00:00Z').getTime(); // July 14th, 2025 at 00:00 UTC
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            const countdownElement = document.getElementById('countdown');
-
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                countdownElement.innerHTML = translations[currentLanguage]['countdown-ended'];
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Replace placeholders in the translated string
-            let countdownText = translations[currentLanguage]['countdown-active'];
-            countdownText = countdownText.replace('{days}', days);
-            countdownText = countdownText.replace('{hours}', hours);
-            countdownText = countdownText.replace('{minutes}', minutes);
-            countdownText = countdownText.replace('{seconds}', seconds);
-
-            countdownElement.innerHTML = countdownText;
-        }
-
-        // Form submission
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const timeSlot = document.getElementById('timeSlot').value;
-            const playerName = document.getElementById('playerName').value;
-            const playerId = document.getElementById('playerId').value;
-            
-            const participant = {
-                timeSlot,
-                playerName,
-                playerId,
-                timestamp: new Date().toISOString()
-            };
-            
-            participants.push(participant);
-            
-            // Show success message
-            const message = document.getElementById('message');
-            message.innerHTML = '<div class="success">' + translations[currentLanguage]['success-message'] + playerName + '!</div>';
-            
-            // Reset form
-            this.reset();
-            
-            // Hide success message after 3 seconds
-            setTimeout(() => {
-                message.innerHTML = '';
-            }, 3000);
-        });
-
-        // Initialize
-        createSnow();
-        // Start the countdown immediately
-        updateCountdown(); 
-        countdownInterval = setInterval(updateCountdown, 1000);
-    </script>
-</body>
-</html>
+                'countdown-running': '🔥 PREP WEEK IS ACTIVE! 🔥', //
