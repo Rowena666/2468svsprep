@@ -252,7 +252,6 @@
             <div class="countdown" id="countdown" data-translate="countdown">Prep Week Starting Soon!</div>
         </div>
 
-        <!-- Language Translator Section -->
         <div class="language-translator">
             <h3 class="translator-title" data-translate="translator-title">🌐 Language Translator</h3>
             <div class="language-grid">
@@ -267,6 +266,9 @@
                 </button>
                 <button class="language-btn" onclick="translatePage('fr')" id="lang-fr">
                     🇫🇷 Français
+                </button>
+                <button class="language-btn" onclick="translatePage('es')" id="lang-es">
+                    🇪🇸 Español
                 </button>
             </div>
             <div class="translation-notice" id="translationNotice" style="display: none;" data-translate="translation-notice">
@@ -318,6 +320,26 @@
     <script>
         // Translation dictionaries
         const translations = {
+            en: { // Added an explicit English translation block for consistency
+                'subtitle': 'State vs State Prep Week - Rally Your Forces!',
+                'countdown': 'Prep Week Starting Soon!',
+                'translator-title': '🌐 Language Translator',
+                'translation-notice': '⚠️ Translation in progress... Please wait a moment.',
+                'join-battle': '🎯 Join the Battle!',
+                'time-slot': '⏰ Time Slot (UTC):',
+                'select-time-slot': 'Select your preferred time slot',
+                'player-name': '🏷️ Player Name:',
+                'player-name-placeholder': 'Enter your survivor name',
+                'player-id': '🆔 Player ID:',
+                'player-id-placeholder': 'Enter your player ID',
+                'enlist-btn': '❄️ Enlist for Battle! ❄️',
+                'instructions-title': '📚 Basic Instructions',
+                'general-rules': '⚠️ General Rules',
+                'rule1': '❄️ Wait for President Skills before using speedups',
+                'rule2': '❄️ Save stamina for Beast Hunting days',
+                'rule3': '❄️ Coordinate with alliance for maximum points',
+                'success-message': '✅ Successfully enlisted! Welcome to the battle, ', // Added success message key
+            },
             ko: {
                 'subtitle': '국가 대 국가 준비 주간 - 군대를 집결하세요!',
                 'countdown': '준비 주간이 곧 시작됩니다!',
@@ -335,7 +357,8 @@
                 'general-rules': '⚠️ 일반 규칙',
                 'rule1': '❄️ 가속 사용 전 대통령 스킬을 기다리세요',
                 'rule2': '❄️ 야수 사냥일을 위해 체력을 아끼세요',
-                'rule3': '❄️ 최대 점수를 위해 동맹과 협력하세요'
+                'rule3': '❄️ 최대 점수를 위해 동맹과 협력하세요',
+                'success-message': '✅ 성공적으로 등록되었습니다! 전투에 오신 것을 환영합니다, ',
             },
             tr: {
                 'subtitle': 'Devlet vs Devlet Hazırlık Haftası - Güçlerinizi Toplayın!',
@@ -354,7 +377,8 @@
                 'general-rules': '⚠️ Genel Kurallar',
                 'rule1': '❄️ Hızlandırma kullanmadan önce Başkan Becerilerini bekleyin',
                 'rule2': '❄️ Canavar Avcılığı günleri için dayanıklılığı saklayın',
-                'rule3': '❄️ Maksimum puan için ittifakla koordine olun'
+                'rule3': '❄️ Maksimum puan için ittifakla koordine olun',
+                'success-message': '✅ Başarıyla kaydolundu! Savaşa hoş geldiniz, ',
             },
             fr: {
                 'subtitle': 'Semaine de Préparation État vs État - Ralliez vos Forces!',
@@ -373,7 +397,28 @@
                 'general-rules': '⚠️ Règles Générales',
                 'rule1': '❄️ Attendez les Compétences du Président avant d\'utiliser les accélérations',
                 'rule2': '❄️ Économisez l\'endurance pour les jours de Chasse aux Bêtes',
-                'rule3': '❄️ Coordonnez avec l\'alliance pour un maximum de points'
+                'rule3': '❄️ Coordonnez avec l\'alliance pour un maximum de points',
+                'success-message': '✅ Enrôlé avec succès ! Bienvenue à la bataille, ',
+            },
+            es: {
+                'subtitle': 'Semana de Preparación de Estado vs. Estado - ¡Reúne a tus Fuerzas!',
+                'countdown': '¡La Semana de Preparación Comienza Pronto!',
+                'translator-title': '🌐 Traductor de Idiomas',
+                'translation-notice': '⚠️ Traducción en curso... Por favor, espere un momento.',
+                'join-battle': '🎯 ¡Únete a la Batalla!',
+                'time-slot': '⏰ Franja Horaria (UTC):',
+                'select-time-slot': 'Selecciona tu franja horaria preferida',
+                'player-name': '🏷️ Nombre del Jugador:',
+                'player-name-placeholder': 'Introduce tu nombre de superviviente',
+                'player-id': '🆔 ID del Jugador:',
+                'player-id-placeholder': 'Introduce tu ID de jugador',
+                'enlist-btn': '❄️ ¡Alístate para la Batalla! ❄️',
+                'instructions-title': '📚 Instrucciones Básicas',
+                'general-rules': '⚠️ Reglas Generales',
+                'rule1': '❄️ Espera las Habilidades del Presidente antes de usar aceleradores',
+                'rule2': '❄️ Guarda la resistencia para los días de Caza de Bestias',
+                'rule3': '❄️ Coordínate con la alianza para obtener el máximo de puntos',
+                'success-message': '✅ ¡Alistado con éxito! Bienvenido a la batalla, ',
             }
         };
 
@@ -407,47 +452,19 @@
             currentLanguage = lang;
             
             setTimeout(() => {
-                if (lang === 'en') {
-                    // Reset to original English text
-                    document.querySelectorAll('[data-translate]').forEach(element => {
-                        const key = element.getAttribute('data-translate');
-                        element.textContent = getOriginalText(key);
-                    });
-                } else {
-                    // Translate to selected language
-                    document.querySelectorAll('[data-translate]').forEach(element => {
-                        const key = element.getAttribute('data-translate');
-                        if (translations[lang] && translations[lang][key]) {
-                            element.textContent = translations[lang][key];
-                        }
-                    });
-                }
+                document.querySelectorAll('[data-translate]').forEach(element => {
+                    const key = element.getAttribute('data-translate');
+                    // Use the English translation as the fallback "original" text
+                    const originalText = translations['en'][key] || ''; 
+                    element.textContent = (translations[lang] && translations[lang][key]) ? translations[lang][key] : originalText;
+                });
                 
+                // Special handling for placeholder attributes
+                document.getElementById('playerName').placeholder = translations[lang]['player-name-placeholder'];
+                document.getElementById('playerId').placeholder = translations[lang]['player-id-placeholder'];
+
                 notice.style.display = 'none';
             }, 500);
-        }
-
-        function getOriginalText(key) {
-            const originals = {
-                'subtitle': 'State vs State Prep Week - Rally Your Forces!',
-                'countdown': 'Prep Week Starting Soon!',
-                'translator-title': '🌐 Language Translator',
-                'translation-notice': '⚠️ Translation in progress... Please wait a moment.',
-                'join-battle': '🎯 Join the Battle!',
-                'time-slot': '⏰ Time Slot (UTC):',
-                'select-time-slot': 'Select your preferred time slot',
-                'player-name': '🏷️ Player Name:',
-                'player-name-placeholder': 'Enter your survivor name',
-                'player-id': '🆔 Player ID:',
-                'player-id-placeholder': 'Enter your player ID',
-                'enlist-btn': '❄️ Enlist for Battle! ❄️',
-                'instructions-title': '📚 Basic Instructions',
-                'general-rules': '⚠️ General Rules',
-                'rule1': '❄️ Wait for President Skills before using speedups',
-                'rule2': '❄️ Save stamina for Beast Hunting days',
-                'rule3': '❄️ Coordinate with alliance for maximum points'
-            };
-            return originals[key] || '';
         }
 
         // Form submission
@@ -469,7 +486,7 @@
             
             // Show success message
             const message = document.getElementById('message');
-            message.innerHTML = '<div class="success">✅ Successfully enlisted! Welcome to the battle, ' + playerName + '!</div>';
+            message.innerHTML = '<div class="success">' + translations[currentLanguage]['success-message'] + playerName + '!</div>';
             
             // Reset form
             this.reset();
