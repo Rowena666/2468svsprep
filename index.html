@@ -737,11 +737,11 @@
                 'day3-caution1': '⚠️ 낮은 레벨 야수를 치지 마세요 – 점수가 좋지 않습니다',
                 'day3-caution2': '⚠️ 랠리 참가는 0점입니다 — 호스트하거나 아무것도 하지 마세요',
                 'day3-caution3': '🛑 여전히 펫 업그레이드를 아끼세요',
-                'day4-title': '⚔️ 4일차 – 병사 훈련의 날',
-                'day4-item1': '❄️ 병사 훈련 또는 진급',
+                'day4-title': '⚔️ 4일차 – 병사 訓練의 날',
+                'day4-item1': '❄️ 병사 訓練 또는 진급',
                 'day4-item2': '❄️ 족장 장비 부적',
-                'day4-item3': '❄️ 훈련 가속',
-                'day4-caution1': '⏳ 시작 전 병사 훈련 버프를 기다리세요',
+                'day4-item3': '❄️ 訓練 가속',
+                'day4-caution1': '⏳ 시작 전 병사 訓練 버프를 기다리세요',
                 'day4-caution2': '🛑 여전히 보관: 펫 업그레이드, 영웅 정수 스톤, 영웅 위젯, 족장 장비 업그레이드, 남은 연구/건설 가속',
                 'day5-title': '🎯 5일차 – 최종 준비 정리',
                 'day5-item1': '❄️ 족장 장비 업그레이드',
@@ -1201,13 +1201,16 @@
         // Dummy data for participants (you'll replace this with your backend)
         let participants = []; // Store participants in memory for demonstration
 
-        // Function to generate time slots
+        // Function to generate time slots (every 30 minutes)
         function generateTimeSlots() {
             const timeSlotSelect = document.getElementById('timeSlot');
             timeSlotSelect.innerHTML = `<option value="" disabled selected>${translations[currentLanguage]['select-time-slot']}</option>`; // Default option
 
-            for (let i = 0; i < 24; i++) { // 24 hours in a day
-                const time = `${i.toString().padStart(2, '0')}:00 UTC`;
+            for (let i = 0; i < 24 * 2; i++) { // 24 hours * 2 (for 00 and 30 minutes)
+                const hour = Math.floor(i / 2);
+                const minute = (i % 2) * 30;
+                
+                const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} UTC`;
                 const option = document.createElement('option');
                 option.value = time;
                 option.textContent = time;
@@ -1220,6 +1223,8 @@
                 }
                 timeSlotSelect.appendChild(option);
             }
+             // Update the "Time Slots Available" count in the stats section
+            document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = (24 * 2) - participants.length;
         }
 
         // Function to load and display participants (dummy data for now)
@@ -1229,9 +1234,11 @@
 
             // Sort participants by time slot for better readability
             const sortedParticipants = [...participants].sort((a, b) => {
-                const timeA = parseInt(a.timeSlot.split(':')[0]);
-                const timeB = parseInt(b.timeSlot.split(':')[0]);
-                return timeA - timeB;
+                const [hourA, minuteA] = a.timeSlot.split(':')[0].split(':').map(Number);
+                const [hourB, minuteB] = b.timeSlot.split(':')[0].split(':').map(Number);
+                
+                if (hourA !== hourB) return hourA - hourB;
+                return minuteA - minuteB;
             });
 
             if (sortedParticipants.length === 0) {
@@ -1256,6 +1263,8 @@
 
             // Update total signups count
             document.getElementById('totalSignups').textContent = participants.length;
+            // Update the "Time Slots Available" count in the stats section
+            document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = (24 * 2) - participants.length;
         }
 
         // Handle form submission
